@@ -1,3 +1,5 @@
+#USE THIS LINK TO SET UP BEFORE USING THIS CODE (https://sbert.net/)
+
 from sentence_transformers import SentenceTransformer
 
 #Loading a pretrained Sentence Transformer model
