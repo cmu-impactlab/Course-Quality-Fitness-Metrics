@@ -8,17 +8,8 @@ def readability(course_quality):
     #Score based on Flesch-Kincaid formula
     score = Textatistic(course_quality).scores['flesch_score']
     
-    #Scaled the score to give a readability score from 1 (difficult) to 5 (easy)
-    if score >= 90.0:
-        return 5 
-    elif score >= 70.0:
-        return 4  
-    elif score >= 50.0:
-        return 3  
-    elif score >= 30.0:
-        return 2  
-    else:
-        return 1
+    #Scaled the score to give a readability score from 1 (difficult) to 3 (easy)
+    return score/(100/3)
 
 
 
@@ -56,10 +47,10 @@ def structure(course_quality):
             levels_found.add(current_level)
             prev_level = current_level
             
-    # Returning a score from 1 to 5 based on logic based on our counts
+    # Returning a score from 1 to 3 based on logic based on our counts
     calculated_score = 1 + len(levels_found)
     if (calculated_score == 4):
-        return 5
+        return 3
     return calculated_score
 
 
