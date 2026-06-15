@@ -17,6 +17,7 @@ def EES(course_quality):
     response = requests.post(
         url="https://openrouter.ai/api/v1/chat/completions",
         headers={
+            #Replace <OPENROUTER_API_KEY> with actual API key
             "Authorization": "Bearer <OPENROUTER_API_KEY>",
             "Content-Type": "application/json",
         },
@@ -91,6 +92,7 @@ def conceptual_continuity(course_quality, course_quality2):
     response = requests.post(
         url="https://openrouter.ai/api/v1/chat/completions",
         headers={
+            #Replace <OPENROUTER_API_KEY> with actual API key
             "Authorization": "Bearer <OPENROUTER_API_KEY>",
             "Content-Type": "application/json",
         },
