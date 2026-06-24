@@ -195,11 +195,21 @@ for file_path in all_files:
     print(f"==================================================")
 
     # --- METRIC 1: SINGLE FILE METRIC (EES) ---
-    try:
-        ees_score = EES(current_text)
+    error = None
+    for i in range(3):
+        try:
+            ees_score = EES(current_text)
+            if (0.0 <= ees_score <= 1.0):
+                error = None
+                break
+        except Exception as e:
+            error = e
+           
+    if (error == None):
         print(f"  ➡️ EES Score: {ees_score}")
-    except Exception as e:
-        print(f"  ❌ Skipping EES due to error: {e}")
+    else:
+        ees_score = 0.0
+        print(f"  ‼️ There was an error: {ees_score}")
 
     # --- METRIC 2: TRANSITION METRIC (Conceptual Continuity) ---
     # Only calculate continuity if there is a previous file AND it belongs to the same lesson run module
