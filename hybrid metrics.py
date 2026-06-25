@@ -17,7 +17,6 @@ def EES(course_quality):
     response = requests.post(
         url="https://openrouter.ai/api/v1/chat/completions",
         headers={
-            #Replace <OPENROUTER_API_KEY> with actual API key
             "Authorization": "Bearer <OPENROUTER_API_KEY>",
             "Content-Type": "application/json",
         },
@@ -26,40 +25,59 @@ def EES(course_quality):
             "messages": [
                 {
                     "role": "user",
-                    "content": f"""Analyze this lesson material and extract a
-                     list of tuples containing the example and exercise pairs.
-                     Return ONLY a raw JSON array of arrays like [["ex1", "ex1"],
-                     ["ex2", "ex2"]]. Absolutely no markdown text, backticks,
-                     or conversational filler.
-                     \n\nLesson Material: \n{course_quality}"""
+                    "content": f"Extract example-exercise pairs from this material: {course_quality}"
                 }
             ],
+            "response_format": {
+                "type": "json_schema",
+                "json_schema": {
+                "name": "exercise_extractor",
+                "strict": True,
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "pairs": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {"type": "string"}
+                            }
+                        }
+                    },
+                    "required": ["pairs"],
+                    "additionalProperties": False
+                    }
+                }
+            }
         })
     )
-    
-    #Convert API response to a Python dictionary and extract the text content
-    raw_text = response.json()["choices"][0]["message"]["content"].strip()
+        
+    #Converts API response to a Python dictionary 
+    response_dict = response.json()
 
-    #Strips markdown backticks if the model includes them
-    #Example: ```json [{"example": "text"}] ```
-    if "```" in raw_text:
-        raw_text = raw_text.replace("```json", "").replace("```", "").strip()
-    
-    #More stripping of any lingering trailing brackets, quotes, or whitespace
+    #Extracts the text content as a string 
+    raw_text = response_dict["choices"][0]["message"]["content"].strip()
+
+    #Strips excess newlines, quotes, or whitespace
+    raw_text = raw_text.replace("```json", "").replace("", "").strip()
     raw_text = raw_text.strip("` \n\r\t")
     
-    #Convert string to Python list
+    #Converts string to 2d list
     data_list = json.loads(raw_text)
+    data_list = data_list["pairs"]
+
+    #Converts 2d list to a list of tuples
+    tuple_list = [tuple(item) for item in data_list] 
     
-    #Convert lists inside to tuples
-    tuple_list = [tuple(item) for item in data_list]  
-    
-  
     #List to store the transition scores between chunks    
     scores = []
     
-    # Loop and compare pairs
+    #Loop and compare pairs
     for pair in tuple_list:
+        #Safely check
+        if (not isinstance(pair, (list, tuple)) or len(pair) < 2):
+            continue  
+
         example = pair[0]
         exercise = pair[1]
         
@@ -83,7 +101,6 @@ def EES(course_quality):
     else:
         #Too similar (penalize the distance upward)
         return max(0.0, 1.0 - ((avg - 0.775) / (1.0 - 0.775)))
-
 
 
 
