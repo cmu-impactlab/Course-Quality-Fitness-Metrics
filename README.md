@@ -32,7 +32,7 @@ Unlike readability or text emeddings, **Hybrid Metrics** bridge mathematical cal
    * Evaluates pedagogical alignment between educational explanations (examples) and corresponding practice tasks (exercises) within a single lesson.
    * Extracts explicit example-exercise pairs using a strict LLM schema and assesses their proximity using cosine similarity.
    * Modifies scores by scaling as the following:
-     * Perfect scores ($1.0$) are awarded exclusively within a balanced threshold ($0.725 \le \text{similarity} \le 0.775$).
+     * Perfect scores $1.0$ are given within a balanced threshold ($0.725 \le \text{similarity} \le 0.775$).
      * Deviations below $0.725$ drop linearly, penalizing exercises that are too disconnected from what was taught.
      * Deviations above $0.775$ drop symmetrically, penalizing repetitive copy-paste tasks that fail to challenge the student.
 
