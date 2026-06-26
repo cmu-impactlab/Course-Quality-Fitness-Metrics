@@ -2,6 +2,8 @@
 
 This project uses a Genetic Algorithm (GA) framework to automatically evaluate and optimize the quality of generated educational course files
 
+---
+
 ## Baseline Metrics
 To unblock the GA loop execution, we have implemented automated evaluation metrics that return a 1-5 scale on the following criteria:
 
